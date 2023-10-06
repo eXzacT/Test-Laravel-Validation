@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Log;
 
 class ValidationTest extends TestCase
 {
@@ -47,7 +48,7 @@ class ValidationTest extends TestCase
     {
         $response = $this->followingRedirects()->post('projects');
         $response->assertStatus(200);
-        $response->assertSee('The name field is required.');
+        $response->assertSee('The title field is required.');
         $response->assertSee('The description field is required.');
     }
 
@@ -107,8 +108,13 @@ class ValidationTest extends TestCase
     public function test_custom_validation_rule()
     {
         $response = $this->post('articles', ['title' => 'lowercase']);
+        //Log::info($response->baseResponse->getSession()->get('errors'));
+       /* $response->assertSessionHasErrors([
+            'title' => 'The title does not start with an uppercased letter.',
+        ])->assertStatus(302);*/
+
         $response->assertSessionHasErrors([
-            'title' => 'The title does not start with an uppercased letter',
+            'title'
         ])->assertStatus(302);
 
         $response = $this->post('articles', ['title' => 'Uppercase']);

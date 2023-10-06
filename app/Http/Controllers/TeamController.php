@@ -21,8 +21,8 @@ class TeamController extends Controller
 
         if ($validator->fails()) {
             return redirect('teams/create')
-                ->withInput()
-                ->withErrors($validator);
+                ->withErrors($validator)
+                ->withInput();
         }
 
         Team::create($validator->validated());
